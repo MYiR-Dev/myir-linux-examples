@@ -163,7 +163,7 @@ int main(int argc, char **argv)
 			close(fd);
 			}
 		else if(optWrite == 0){
-			dbg_printf("eeprom_read\n");
+//			dbg_printf("eeprom_read\n");
 			char buffer[EEPROM_BUFFER_SIZE] = {0};
 			
 			ret = eeprom_read(fd, eeprom_addr, eeprom_offset, buffer, count);

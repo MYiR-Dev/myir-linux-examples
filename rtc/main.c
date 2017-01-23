@@ -20,7 +20,7 @@
 #include "rtc.h"
 
 static const char *		version 		= "1.0";
-static char *			dev_name 		= "/dev/rtc0";
+static char *			dev_name 		= "/dev/rtc";
 
 static const char short_options[] = "d:w:h";
 
@@ -38,34 +38,25 @@ static void usage(FILE *fp, int argc, char **argv)
 			 "Version %s \n"
 			 "Options:\n"
 			 "-d | --device name   tty device name: %s\n"
-			 "-w | --write time   time string with format MMDDhhmm[[YY]YY][.ss]. such as: 111817582016.18\r\n"
+			 "-w | --write time   time string with format MMDDhhmm[CCYY][.ss]. such as: 111817582016.18\r\n"
 			 "-h | --help		   Print this message\n"
 			 "",
-			 argv[0], version, dev_name, tty_baudrate);
+			 argv[0], version, dev_name);
 }
 
 int main(int argc, char **argv)
 {
 	int ret = 0;
-	dev_name = "/dev/ttyO0";
+	dev_name = "/dev/rtc";
 	char *strWriteFrame = NULL;
-
-	// operate circularly	
-	int flgLoop = 0;
-
-	// flow control
-	int flgFlow = 0;
-
-	// tty mode
-	int ttyMode = TTY_RS232_MODE;
 
 	// write mode  0: read only; 1: read and write
 	int optWrite = 0; 
 
-	if(argc < 2){
-		usage(stdout, argc, argv);
-		exit(EXIT_SUCCESS);
-		}
+//	if(argc < 2){
+//		usage(stdout, argc, argv);
+//		exit(EXIT_SUCCESS);
+//		}
 
 	for(;;){
 		int opt_idx;
@@ -82,24 +73,6 @@ int main(int argc, char **argv)
 			case 'd':
 				dev_name = optarg;
 				break;
-
-			case 'b':
-				tty_baudrate = atoi(optarg);
-				break;
-
-			case 'f':
-				flgFlow = 1;
-				break;
-
-			case 'm':
-				ttyMode = atoi(optarg);
-				if((ttyMode != TTY_RS485_MODE)&&(ttyMode!= TTY_RS232_MODE)){
-					fprintf(stderr, "\n Wrong TTY Mode, please try:\n"
-									"  0  -- RS232\n"
-									"  1  -- RS485\n");
-					exit(EXIT_FAILURE);
-					}
-				break;
 				
 			case 'w':
 				strWriteFrame = optarg;
@@ -108,10 +81,6 @@ int main(int argc, char **argv)
 					exit(EXIT_FAILURE);
 					}
 				optWrite = 1;
-				break;
-				
-			case 'l':
-				flgLoop = 1;
 				break;
 
 			case 'h':
@@ -124,52 +93,50 @@ int main(int argc, char **argv)
 			}
 		}
 	
-	int tty_fd = -1;
-	char tty_read_back[TTY_READ_BUFFER_SIZE];
-	memset(&tty_read_back, 0, TTY_READ_BUFFER_SIZE);
+	int fd = -1;
 
-	tty_fd = tty_init(dev_name);
-	if( tty_fd < 0){
-		dbg_printf("Initialize tty device %s failed!\r\n", dev_name);
+	fd = rtc_init(dev_name);
+	if( fd < 0){
+		dbg_printf("Initialize rtc device %s failed!\r\n", dev_name);
 		exit(EXIT_FAILURE);
 		}
 	
-	ret = tty_setting(tty_fd, tty_baudrate, 8, ttyMode, flgFlow, 'n', 1);
-	if(ret < 0){
-		dbg_printf("setting tty device %s failed!\r\n", dev_name);
-		exit(EXIT_FAILURE);
-		}
-
 	do{
 		if(optWrite == 1){
-			int i = 0;
-			dbg_printf("SEND:%s\r\n", strWriteFrame);
-			sleep(3);
+			int hour, minute, second, year, month, day;
 
-			ret = tty_write(tty_fd , strWriteFrame, strlen(strWriteFrame));
-			
-			if(ret <= 0){
-				dbg_printf("Write tty device %s failed!\r\n", dev_name);
-				close(tty_fd);
+			ret = parse_time(strWriteFrame, &hour,&minute,&second,&year,&month,&day);
+			if(ret < 0 ){
+				fprintf(stderr, "\nWrong time format, please try:\n"
+								" Time string with format MMDDhhmm[CCYY][.ss]. such as: 111817582016.18 \n");
 				exit(EXIT_FAILURE);
 				}
-				sleep(1);
+			
+			ret = rtc_set_time(fd , hour, minute, second, year, month, day);
+			
+			if(ret < 0){
+				dbg_printf("set time to  device %s failed!\r\n", dev_name);
+				close(fd);
+				exit(EXIT_FAILURE);
+				}
+			
+			dbg_printf("date/time is updated to:  %d-%d-%d, %02d:%02d:%02d.\n\n",
+					day, month, year, hour, minute, second);
+			close(fd);
 			}
-
-		ret = tty_read(tty_fd, tty_read_back);
-		if(ret > 0 ){
-			// got data success
-			dbg_printf("RECV:%s, total:%d \n", tty_read_back, ret);
+		else if(optWrite == 0){
+			struct rtc_time time;
+			ret = rtc_read_time(fd, &time);
+			if(ret < 0){
+				dbg_printf("read time from rtc %s failed!\r\n", dev_name);
+				close(fd);
+				exit(EXIT_FAILURE);
+				}
+			
+			dbg_printf("Current RTC date/time is %d-%d-%d, %02d:%02d:%02d.\n\n",
+					time.tm_mday, time.tm_mon + 1, time.tm_year + 1900,
+					time.tm_hour, time.tm_min, time.tm_sec);
+			close(fd);
 			}
-		else if(ret == 0){
-			// Can read data timeout, try again
-			//dbg_printf("== select can timout ===\r\n");
-			}
-		else if(ret < 0){
-			// Can read data error!
-			// dbg_printf("== read can error ===\r\n");
-			}
-		
-		
-		}while(flgLoop == 1);
+		}while(0);
 	}
