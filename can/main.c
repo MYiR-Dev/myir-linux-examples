@@ -141,7 +141,7 @@ int main(int argc, char **argv)
 	do{
 		if(optWrite == 1){
 			int i = 0;
-			dbg_printf("====== write  frame: ======\r\n ");
+			dbg_printf("====== write  frame: ======\r\n");
 			dbg_printf(" frame_id = 0x%x \n", can_write_frame.can_id);
 			dbg_printf(" frame_len = %d \n", can_write_frame.can_dlc);
 			dbg_printf(" frame_data = ", can_write_frame.can_dlc);
