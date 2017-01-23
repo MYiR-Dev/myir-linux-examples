@@ -22,7 +22,7 @@
 
 static const char *		version = "1.0";
 
-static char *			dev_name;
+static char *			dev_name = "/dev/fb0";
 
 static const char short_options[] = "d:h";
 
@@ -47,7 +47,6 @@ static void usage(FILE *fp, int argc, char **argv)
 int main(int argc, char **argv)
 {
 	int ret = 0;
-	dev_name = "/dev/fb0";
 	fb_dev_t *myir_fb = NULL;
 
 	unsigned int w,h;

@@ -53,7 +53,6 @@ static void usage(FILE *fp, int argc, char **argv)
 int main(int argc, char **argv)
 {
 	int ret = 0;
-	dev_name = "/dev/i2c-0";
 	char *strWriteFrame = NULL;
 	
 	// write mode  0: read ; 1: write

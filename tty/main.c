@@ -56,7 +56,6 @@ static void usage(FILE *fp, int argc, char **argv)
 int main(int argc, char **argv)
 {
 	int ret = 0;
-	dev_name = "/dev/ttyO0";
 	char *strWriteFrame = NULL;
 
 	// operate circularly	

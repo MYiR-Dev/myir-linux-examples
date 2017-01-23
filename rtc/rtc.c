@@ -4,7 +4,7 @@
 * Author: Sunny.Guo
 * Version: 1.0
 * Date: 2017年 01月 19日 星期四 10:12:50 CST
-* Description: can operation functions
+* Description: rtc operation functions
 *
 * History:        
 *  <author>  	<time>   	<version >   	<desc>
@@ -19,7 +19,7 @@
 /******************************************************************************
   Function:       rtc_init
   Description:    initialize rtc device
-  Input:          tty    	--  rtc device name, such as '/dev/rtc'
+  Input:          rtc    	--  rtc device name, such as '/dev/rtc'
                    
   Output:          
   Return:         int		--  return the rtc fd

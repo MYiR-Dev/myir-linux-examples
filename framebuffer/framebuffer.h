@@ -12,14 +12,14 @@
 *                                                                          
 * Licensed under GPLv2 or later, see file LICENSE in this source tree.
 *******************************************************************************/
+#ifndef __FRAMEBUFFER_H__
+
 #include <linux/fb.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <sys/types.h>
 
 #include "common.h"
-
-#ifndef __FRAMEBUFFER_H__
 
 #define COLOR_RED			0xff0000
 #define COLOR_GREEN			0x00ff00

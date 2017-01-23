@@ -1,10 +1,10 @@
 /******************************************************************************
 * Copyright (C), 2016-2017, Sunny.Guo
-* FileName: tty.c 
+* FileName: eeprom.c 
 * Author: Sunny.Guo
 * Version: 1.0
 * Date: 2017年 01月 19日 星期四 10:12:50 CST
-* Description: can operation functions
+* Description: eeprom operation functions
 *
 * History:        
 *  <author>  	<time>   	<version >   	<desc>

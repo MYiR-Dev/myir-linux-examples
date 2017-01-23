@@ -12,7 +12,8 @@
 *                                                                          
 * Licensed under GPLv2 or later, see file LICENSE in this source tree.
 *******************************************************************************/
-#ifndef __TTY_H__
+#ifndef __EEPROM_H__
+
 #include <linux/ioctl.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
@@ -69,4 +70,4 @@ int 			eeprom_read(int fd, int addr, int start, char *data, int len);
 
 int 			parse_address(char *address_arg);
 
-#endif	 // __TTY_H__	
+#endif	 // __EEPROM_H__	

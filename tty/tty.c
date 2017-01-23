@@ -4,7 +4,7 @@
 * Author: Sunny.Guo
 * Version: 1.0
 * Date: 2017年 01月 19日 星期四 10:12:50 CST
-* Description: can operation functions
+* Description: tty operation functions
 *
 * History:        
 *  <author>  	<time>   	<version >   	<desc>

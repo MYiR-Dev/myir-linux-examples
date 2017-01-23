@@ -47,7 +47,6 @@ static void usage(FILE *fp, int argc, char **argv)
 int main(int argc, char **argv)
 {
 	int ret = 0;
-	dev_name = "/dev/rtc";
 	char *strWriteFrame = NULL;
 
 	// write mode  0: read only; 1: read and write

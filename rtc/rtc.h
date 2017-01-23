@@ -1,6 +1,6 @@
 /******************************************************************************
 * Copyright (C), 2016-2017, Sunny.Guo
-* FileName: tty.h 
+* FileName: rtc.h 
 * Author: Sunny.Guo
 * Version: 1.0
 * Date: 2017年 01月 19日 星期四 10:12:50 CST
@@ -12,7 +12,8 @@
 *                                                                          
 * Licensed under GPLv2 or later, see file LICENSE in this source tree.
 *******************************************************************************/
-#ifndef __TTY_H__
+#ifndef __RTC_H__
+
 #include <linux/rtc.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
@@ -52,4 +53,4 @@ int				rtc_set_time(int fd, int hour, int minute, int second, int year, int mont
 *******************************************************************************/
 int 			parse_time(char *time, int *hour, int *minute, int *second, int *year, int *month, int *day);
 
-#endif	 // __TTY_H__	
+#endif	 // __RTC_H__	
