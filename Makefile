@@ -2,7 +2,8 @@
 
 export PRU_CGT=/home/sunny/toolchain_linaro/ti-cgt-pru_2.1.3
 
-PREFIX ?= $(shell pwd)/rootfs
+#PREFIX ?= $(shell pwd)/rootfs
+PREFIX = /home/sunny/export/rootfs
 
 #CROSS_COMPILE := arm-linux-gnueabihf-
 CROSS_COMPILE := arm-myir-linux-gnueabihf-

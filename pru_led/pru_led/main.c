@@ -52,14 +52,14 @@ int main(int argc, char **argv)
 	int ret = 0;
 
 	// number to display. 
-	int led = 0;
+	char * led = NULL;
 	
 	// operate circularly	
 	int flgLoop = 0;
 	int loopCount = 1;
 	int backCount = 0;
 	
-	char str[2] = {'0','\0'};
+	char str[MAX_BUFFER_SIZE] = {'\0'};
 	char readBuf[MAX_BUFFER_SIZE]={0};
 	int i = 1;
 
@@ -85,12 +85,7 @@ int main(int argc, char **argv)
 				break;
 
 			case 'n':
-				led = atoi(optarg);
-				if(led < 0 || led > 7){
-					fprintf(stderr, "\nWrong parameter, please try: 0~7 \n");
-					usage(stderr, argc, argv);
-					exit(EXIT_FAILURE);
-					}
+				led = optarg;
 				break;
 				
 			case 'l':
@@ -116,18 +111,20 @@ int main(int argc, char **argv)
 	
 	
 	while(i <= loopCount){
+		memset(str, 0 , sizeof(str));
 		if(flgLoop == 1){
 			sprintf(str,"%d", i%8);
 			}
 		else{
-			sprintf(str,"%d", led);
+			sprintf(str,"%s", led);
 			}
 		
 		ret = pru_led_set(fd, str);
 		if (ret > 0){
 			dbg_printf("%d - Sent to PRU: %s\n", i, str);
 			}
-		
+
+		sleep(1);
 		/* Poll until we receive a message from the PRU and then print it */
 		memset(readBuf, 0 , sizeof(readBuf));
 		ret = pru_rpmsg_read(fd, readBuf);

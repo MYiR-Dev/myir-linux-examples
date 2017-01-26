@@ -49,9 +49,6 @@ int				pru_led_set(int fd,  char *led)
 {
 	int ret = 0;
 	ret = write(fd, led, strlen(led));
-	if (ret > 0){
-		dbg_printf("Sent to PRU: %c\n", led);
-		}
 
 	return ret;
 }
