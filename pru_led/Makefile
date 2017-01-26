@@ -1,4 +1,4 @@
-SUBDIRS=pru_led lib/src PRU_RPMsg_LED0_1
+SUBDIRS=pru_led lib/src PRU_RPMsg_LED0_1 PRU_RPMsg_Echo_Interrupt0_0 PRU_Halt
 
 all: $(SUBDIRS)
 

@@ -6,7 +6,9 @@ OBJS = $(patsubst %.c ,%.o ,$(SRC))
 all: $(TARGET)
 $(TARGET) : $(OBJS)
 	$(CC) -o $@ $^
+	@cp $(TARGET) ../
+
 %.o : %.c
 	$(CC) -c $< -o $@
 clean:
-	$(RM) *.o $(TARGET)
+	$(RM) *.o $(TARGET) ../$(TARGET)
