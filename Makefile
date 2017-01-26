@@ -8,7 +8,7 @@ PREFIX = /home/sunny/export/rootfs
 #CROSS_COMPILE := arm-linux-gnueabihf-
 CROSS_COMPILE := arm-myir-linux-gnueabihf-
 
-SUBDIRS=framebuffer keypad rtc eeprom led can camera tty spi gpio watchdog beeper pru_led
+SUBDIRS=framebuffer keypad rtc eeprom led can tty gpio pru_led
 
 all: $(SUBDIRS)
 
