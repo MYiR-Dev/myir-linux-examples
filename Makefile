@@ -1,36 +1,18 @@
 # make all demoes at one time
 
-CROSS_COMPILE := arm-linux-gnueabihf-
+#CROSS_COMPILE := arm-linux-gnueabihf-
+CROSS_COMPILE := arm-myir-linux-gnueabihf-
+PRU_CGT :=/home/sunny/toolchain_linaro/ti-cgt-pru_2.1.3
 
-all: 
-	make -C ./framebuffer/
-	make -C ./keypad/
-	make -C ./rtc/
-	make -C ./eeprom/
-	make -C ./led/
-	make -C ./can/
-	make -C ./camera/
-	make -C ./tty
-	make -C ./spi/
-	make -C ./gpio/
-	make -C ./watchdog/
-	make -C ./beeper/
-	
+SUBDIRS=framebuffer keypad rtc eeprom led can camera tty spi gpio watchdog beeper pru_led
 
-.Phony: clean
+all: $(SUBDIRS)
+
+$(SUBDIRS):
+	@$(MAKE) -C $@
 
 clean:
-	make clean -C ./framebuffer/
-	make clean -C ./keypad/
-	make clean -C ./rtc/
-	make clean -C ./eeprom/
-	make clean -C ./led/
-	make clean -C ./can/
-	make clean -C ./camera/
-	make clean -C ./tty/
-	make clean -C ./spi/
-	make clean -C ./gpio/
-	make clean -C ./watchdog/
-	make clean -C ./beeper/
+	@for d in $(SUBDIRS); do (cd $$d; $(MAKE) clean ); done
 
+.PHONY: all clean $(SUBDIRS)
 
