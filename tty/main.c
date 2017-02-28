@@ -164,6 +164,7 @@ int main(int argc, char **argv)
 				sleep(1);
 			}
 
+		memset(&tty_read_back, 0, TTY_READ_BUFFER_SIZE);
 		ret = tty_read(tty_fd, tty_read_back);
 		if(ret > 0 ){
 			// got data success
