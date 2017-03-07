@@ -1,14 +1,27 @@
 # make all demoes at one time
 
-export PRU_CGT=/home/sunny/toolchain_linaro/ti-cgt-pru_2.1.3
+#export PRU_CGT=/home/sunny/toolchain_linaro/ti-cgt-pru_2.1.3
 
-#PREFIX ?= $(shell pwd)/rootfs
-PREFIX = /home/sunny/export/rootfs
+PREFIX ?= $(shell pwd)/rootfs
+#PREFIX = /home/sunny/export/rootfs_c437x
 
-#CROSS_COMPILE := arm-linux-gnueabihf-
-CROSS_COMPILE := arm-myir-linux-gnueabihf-
+CROSS_COMPILE ?= arm-linux-gnueabihf-
+#CROSS_COMPILE := arm-myir-linux-gnueabihf-
+ifeq ($(OPTION), MYD-C437X-PRU)
+SUBDIRS=framebuffer keypad rtc eeprom led can tty gpio pru_led
+endif
 
-SUBDIRS=audio framebuffer keypad rtc eeprom led can tty gpio pru_led
+ifeq ($(OPTION), MYD-AM335X-X)
+SUBDIRS=audio framebuffer keypad rtc eeprom led can tty gpio
+endif
+
+ifeq ($(OPTION), MYD-AM335X-Y)
+SUBDIRS=audio framebuffer keypad rtc eeprom led can tty gpio
+endif
+
+ifeq ($(OPTION), MYD-AM335X-J)
+SUBDIRS=audio framebuffer keypad rtc eeprom led can tty gpio
+endif
 
 all: $(SUBDIRS)
 

@@ -1,6 +1,6 @@
 CC = $(CROSS_COMPILE)gcc
-CFLAGS ?=  -I /home/sunny/myir-buildroot/output/host/usr/arm-myir-linux-gnueabihf/sysroot/usr/include
-LDFLAGS ?=  -lpthread -lasound -L /home/sunny/myir-buildroot/output/host/usr/arm-myir-linux-gnueabihf/sysroot/usr/lib
+CFLAGS ?=  -I /home/sunny/sources/myir-buildroot/output/host/usr/arm-myir-linux-gnueabihf/sysroot/usr/include
+LDFLAGS ?=  -lpthread -lasound -L /home/sunny/sources/myir-buildroot/output/host/usr/arm-myir-linux-gnueabihf/sysroot/usr/lib
 TARGET = $(notdir $(CURDIR))_test
 SRC =  $(shell ls *.c)
 OBJS = $(patsubst %.c ,%.o ,$(SRC))
