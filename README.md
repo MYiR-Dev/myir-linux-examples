@@ -27,12 +27,22 @@
 	
 
 ```  
-  $ make
+  $ make  OPTION=<Board Name>
+eg.
+  $ make OPTION=MYD-C437X-PRU
 ```  
+## Clean
+
+  $ make OPTION=<Board Name> clean
+eg.
+  $ make OPTION=MYD-C437X-PRU clean
+
   
 ## Install  
 
-  $ make install
+  $ make OPTION=<Board Name> install
+eg.
+  $ make OPTION=MYD-C437X-PRU install
 	
   
 
