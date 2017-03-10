@@ -90,10 +90,11 @@ int 			parse_time(char *time, int *hour, int *minute, int *second, int *year, in
 		(time[len] == '.' && isdigit(time[len+1]) && isdigit(time[len+2]))){
 		len = sscanf(time, "%2u%2u%2u%2u%4u%c", month, day, hour, minute, year, &end);
 //		dbg_printf(" len2 = %d \r\n", len);
-		if(len >= 5){
-			*month = *month - 1;
-			}
-		else{
+//		if(len >= 5){
+//			*month = *month - 1;
+//			}
+//		else{
+		if(len < 5){
 			return -3;
 			}
 
