@@ -90,7 +90,8 @@ int main(int argc, char **argv)
 		dbg_perror("Framebuffer device init failed!\r\n");
 		exit(EXIT_FAILURE);
 		}
-	
+	while(1){	
+	sleep(1);
 	fill_background(myir_fb, COLOR_RED);
 	sleep(1);
 	fill_background(myir_fb, COLOR_GREEN);
@@ -130,3 +131,4 @@ int main(int argc, char **argv)
 	draw_line(myir_fb, p3, p0, COLOR_YELLOW);
 	draw_line(myir_fb, p4, p0, COLOR_YELLOW);
 	}
+}
