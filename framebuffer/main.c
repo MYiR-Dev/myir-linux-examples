@@ -91,44 +91,44 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 		}
 	while(1){	
-	sleep(1);
-	fill_background(myir_fb, COLOR_RED);
-	sleep(1);
-	fill_background(myir_fb, COLOR_GREEN);
-	sleep(1);
-	fill_background(myir_fb, COLOR_BLUE);
-	sleep(1);
-	fill_background(myir_fb, COLOR_WHITE);
-	sleep(1);
-	fill_background(myir_fb, COLOR_BLACK);
-	sleep(1);
+		sleep(1);
+		fill_background(myir_fb, COLOR_RED);
+		sleep(1);
+		fill_background(myir_fb, COLOR_GREEN);
+		sleep(1);
+		fill_background(myir_fb, COLOR_BLUE);
+		sleep(1);
+		fill_background(myir_fb, COLOR_WHITE);
+		sleep(1);
+		fill_background(myir_fb, COLOR_BLACK);
+		sleep(1);
 
-	w = get_fb_width(myir_fb);
-	h = get_fb_height(myir_fb);
+		w = get_fb_width(myir_fb);
+		h = get_fb_height(myir_fb);
 		
-	p0.x = w/2;
-	p0.y = h/2;
+		p0.x = w/2;
+		p0.y = h/2;
 
-	p1.x = 0;
-	p1.y = 0;
+		p1.x = 0;
+		p1.y = 0;
 
-	p2.x = w;
-	p2.y = h;
+		p2.x = w;
+		p2.y = h;
 
-	p3.x = 0;
-	p3.y = h;
+		p3.x = 0;
+		p3.y = h;
 
-	p4.x = w;
-	p4.y = 0;
+		p4.x = w;
+		p4.y = 0;
 	
-	fill_square(myir_fb, p1, p0, COLOR_RED);
-	fill_square(myir_fb, p2, p0, COLOR_GREEN);
-	fill_square(myir_fb, p3, p0, COLOR_BLUE);
-	fill_square(myir_fb, p4, p0, COLOR_WHITE);
+		fill_square(myir_fb, p1, p0, COLOR_RED);
+		fill_square(myir_fb, p2, p0, COLOR_GREEN);
+		fill_square(myir_fb, p3, p0, COLOR_BLUE);
+		fill_square(myir_fb, p4, p0, COLOR_WHITE);
 	
-	draw_line(myir_fb, p1, p0, COLOR_YELLOW);
-	draw_line(myir_fb, p2, p0, COLOR_YELLOW);
-	draw_line(myir_fb, p3, p0, COLOR_YELLOW);
-	draw_line(myir_fb, p4, p0, COLOR_YELLOW);
+		draw_line(myir_fb, p1, p0, COLOR_YELLOW);
+		draw_line(myir_fb, p2, p0, COLOR_YELLOW);
+		draw_line(myir_fb, p3, p0, COLOR_YELLOW);
+		draw_line(myir_fb, p4, p0, COLOR_YELLOW);
 	}
 }
