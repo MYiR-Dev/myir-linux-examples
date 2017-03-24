@@ -21,9 +21,10 @@
   * OPTION:  
 	Board Name    |  OPTION       |  Description
 	MYD-C437X-PRU | MYD-C437X-PRU |  MYD-C437X-PRU development board
-	MYD-AM335X-C  | MYD-AM335X-C  |  MYD-C437X-PRU development board
-	MYD-AM335X-Y  | MYD-AM335X-Y  |  MYD-C437X-PRU development board
-	MYD-AM335X-J  | MYD-AM335X-J  |  MYD-C437X-PRU development board
+	MYD-AM335X-C  | MYD-AM335X-C  |  MYD-C335X development board
+	MYD-AM335X-Y  | MYD-AM335X-Y  |  MYD-AM335X-Y development board
+	MYD-AM335X-J  | MYD-AM335X-J  |  MYD-AM335X-J development board
+	MYD-AM335X-SERIES  | MYD-AM335X-SERIES  |  MYD AM335X SERIES development boards include MYD-C335X,MYD-AM335X-Y and MYD-AM335X-J 
 	
 
 ```  

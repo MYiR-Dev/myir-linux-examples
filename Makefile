@@ -3,12 +3,18 @@
 #export PRU_CGT=/home/sunny/toolchain_linaro/ti-cgt-pru_2.1.3
 
 PREFIX ?= $(shell pwd)/rootfs
+
+#uncomment to install to exported NFS root directory
 #PREFIX = /home/sunny/export/rootfs_c437x
 
 CROSS_COMPILE ?= arm-linux-gnueabihf-
 #CROSS_COMPILE := arm-myir-linux-gnueabihf-
 ifeq ($(OPTION), MYD-C437X-PRU)
 SUBDIRS=framebuffer keypad rtc eeprom led can tty gpio pru_led
+endif
+
+ifeq ($(OPTION), MYD-AM335X-SERIES)
+SUBDIRS= audio framebuffer rtc tty can network mtd led
 endif
 
 ifeq ($(OPTION), MYD-AM335X-X)
