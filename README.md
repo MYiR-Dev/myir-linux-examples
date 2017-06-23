@@ -21,6 +21,7 @@
   * OPTION:  
 	Board Name    |  OPTION       |  Description
 	MYD-C437X-PRU | MYD-C437X-PRU |  MYD-C437X-PRU development board
+	MYD-C437X-EVM | MYD-C437X-EVM |  MYD-C437X-EVM development board
 	MYD-AM335X-C  | MYD-AM335X-C  |  MYD-C335X development board
 	MYD-AM335X-Y  | MYD-AM335X-Y  |  MYD-AM335X-Y development board
 	MYD-AM335X-J  | MYD-AM335X-J  |  MYD-AM335X-J development board

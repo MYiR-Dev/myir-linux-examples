@@ -13,6 +13,10 @@ ifeq ($(OPTION), MYD-C437X-PRU)
 SUBDIRS=framebuffer keypad rtc eeprom led can tty gpio pru_led
 endif
 
+ifeq ($(OPTION), MYD-C437X-EVM)
+SUBDIRS=audio camera framebuffer keypad rtc eeprom led can tty gpio
+endif
+
 ifeq ($(OPTION), MYD-AM335X-SERIES)
 SUBDIRS= audio framebuffer rtc tty can network mtd led
 endif
