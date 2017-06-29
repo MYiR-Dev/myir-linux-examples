@@ -20,11 +20,13 @@
 #include "common.h"
 #include "jpeg.h"
 #include "loopback.h"
+#include "framebuffer.h"
 
 extern control_t status;
 
 
 static const char *		version 		= "1.0";
+static char *			dev_name = "/dev/fb0";
 
 static const char short_options[] = "h";
 
@@ -86,11 +88,12 @@ static void *thread_func(void *arg){
     exit_devices();
 }
 
-
 int main(int argc, char **argv)
 {
 	int ret = 0;
-
+    fb_dev_t *myir_fb = NULL;
+    pthread_t tid;
+    
 	for(;;){
 		int opt_idx;
 		int opt_nxt;
@@ -113,10 +116,24 @@ int main(int argc, char **argv)
 			}
 		}
 
-	pthread_t tid;
-	int i;
 
-
+    
+    myir_fb = malloc(sizeof(fb_dev_t));
+	if(myir_fb == NULL){
+		dbg_perror("Framebuffer device malloc error, not enough memory!\r\n");
+		exit(EXIT_FAILURE);
+		}
+    
+    ret = fb_init(dev_name, myir_fb);
+	if(ret < 0 ){
+		dbg_perror("Framebuffer device init failed!\r\n");
+		exit(EXIT_FAILURE);
+		}
+    
+    usleep(500000);
+    fill_background(myir_fb, COLOR_BLACK);
+    usleep(500000);
+    
     if(init_loopback() < 0) {
         /* TODO: make sure exit occurs properly */
     }
