@@ -7,10 +7,19 @@ PREFIX ?= $(shell pwd)/rootfs
 #uncomment to install to exported NFS root directory
 #PREFIX = /home/sunny/export/rootfs_c437x
 
-CROSS_COMPILE ?= arm-linux-gnueabihf-
-#CROSS_COMPILE := arm-myir-linux-gnueabihf-
+#CROSS_COMPILE ?= arm-linux-gnueabihf-
+CROSS_COMPILE := arm-myir-linux-gnueabihf-
+
+ifeq ($(OPTION), MYD-C437X-EVM)
+SUBDIRS=framebuffer keypad rtc eeprom led can tty gpio camera
+endif
+
 ifeq ($(OPTION), MYD-C437X-PRU)
 SUBDIRS=framebuffer keypad rtc eeprom led can tty gpio pru_led
+endif
+
+ifeq ($(OPTION), MYD-C437X-EVM)
+SUBDIRS=audio camera framebuffer keypad rtc eeprom led can tty gpio
 endif
 
 ifeq ($(OPTION), MYD-AM335X-SERIES)
