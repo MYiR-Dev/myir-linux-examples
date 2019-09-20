@@ -26,7 +26,7 @@
 
 // gpio3_7 --  3*32+7 = 103
 #define EEPROM_WP_GPIO			103
-#define EEPROM_BUFFER_SIZE		256
+#define EEPROM_BUFFER_SIZE		100
 
 #define I2C_RETRIES 			0x0701
 #define I2C_TIMEOUT 			0x0702

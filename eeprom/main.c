@@ -22,14 +22,17 @@
 static const char *		version 		= "1.0";
 static char *			dev_name 		= "/dev/i2c-0";
 
-static const char short_options[] = "d:a:w:r:s:h";
+static const char short_options[] = "d:a:w:r:e:s:hqx";
 
 static const struct option long_options[] = {
 			{"device", 	required_argument, 	NULL, 'd'},
 			{"address", required_argument, NULL, 'a'},
 			{"start", required_argument, NULL, 's'},
 			{"read",	required_argument,	NULL, 'r'},
+			{"erase",	required_argument,	NULL, 'e'},
 			{"write",	required_argument,	NULL, 'w'},
+			{"quiet",	no_argument,		NULL, 'q'},
+			{"hex",	no_argument,		NULL, 'x'},
 			{"help",	no_argument,		NULL, 'h'},
 			{0,		0,					0,  0}
 };
@@ -43,8 +46,11 @@ static void usage(FILE *fp, int argc, char **argv)
 			 "-d | --device name   i2c device name: %s\n"
 			 "-a | --address addr 	eeprom i2c address, default 0x51\n"
 			 "-s | --start addr 	start offset to read/write \n"
-			 "-r | --read  count    read byte count \r\n"
+			 "-r | --read  count    read byte count, count<64 \r\n"
+			 "-e | --erase  count   erase byte count, fill with 0x00, count<64 \r\n"
 			 "-w | --write frame 	write frame string. such as: 0123456789\r\n"
+			 "-x | --hex 	        display with hex mode.\n"
+			 "-q | --quiet 	        quiet mode.\n"
 			 "-h | --help		   Print this message\n"
 			 "",
 			 argv[0], version, dev_name);
@@ -57,6 +63,12 @@ int main(int argc, char **argv)
 	
 	// write mode  0: read ; 1: write
 	int optWrite = 0; 
+
+    // display mode 0: str   1: hex
+    int hexmode = 0;
+
+    // quiet mode 0: noquiet   1: quiet
+    int quietmode = 0;
 
 	// eeprom i2c addr
 	int eeprom_addr = EEPROM_I2C_ADDR;
@@ -121,6 +133,23 @@ int main(int argc, char **argv)
 				count = atoi(optarg);
 				break;
 
+            case 'e':
+                optWrite = 1;
+                count = atoi(optarg);
+                strWriteFrame = (char*)malloc(count);
+                if(strWriteFrame!=NULL){
+                    memset(strWriteFrame, 0, count);
+                }
+                break;
+
+			case 'x':
+				hexmode = 1;
+				break;
+
+			case 'q':
+                quietmode = 1;
+				break;
+
 			case 'h':
 				usage(stdout, argc, argv);
 				exit(EXIT_SUCCESS);
@@ -152,12 +181,16 @@ int main(int argc, char **argv)
 		if(optWrite == 1){
 			dbg_printf("WRITE:%s\r\n", strWriteFrame);
 			
-			ret = eeprom_write(fd, eeprom_addr, eeprom_offset, strWriteFrame, strlen(strWriteFrame));
+            ret = eeprom_write(fd, eeprom_addr, eeprom_offset, strWriteFrame, count>0?count:strlen(strWriteFrame));
 			if(ret <= 0){
 				dbg_printf("Write to eeprom failed!\r\n");
 				close(fd);
 				exit(EXIT_FAILURE);
 				}
+            if(count>0){
+                free(strWriteFrame);
+                strWriteFrame=NULL;
+            }
 			dbg_printf("WRITE SUCCESS!\r\n");
 			close(fd);
 			}
@@ -171,9 +204,40 @@ int main(int argc, char **argv)
 				close(fd);
 				exit(EXIT_FAILURE);
 				}
-			
-			dbg_printf("READ:%s\r\n", buffer);
-			dbg_printf("TOTAL %d BYTES.\r\n", strlen(buffer));
+            if(quietmode == 1){
+			    dbg_printf("%s", buffer);
+                if(hexmode==1){
+                    int l = count>0?count:strlen(buffer);
+                    int index = 0;
+			        dbg_printf("\r\n");
+                    for(index=0;index<l;index++){
+                        if( (index % 16) == 0  ) 
+                                dbg_printf("\r\n %.4x|  ",eeprom_offset+index);
+                        else if( (index % 8) == 0  ) 
+                                        printf("  ");
+                        dbg_printf("%.2x ", buffer[index]);
+                    }
+			        dbg_printf("\r\n");
+                }
+            }
+            else
+            {
+			dbg_printf("\nREAD:%s\r\n", buffer);
+                dbg_printf("TOTAL %d BYTES.\r\n", count>0?count:strlen(buffer));
+                if(hexmode==1){
+                    int l = count>0?count:strlen(buffer);
+                    int index = 0;
+			        dbg_printf("\r\n");
+                    for(index=0;index<l;index++){
+                        if( (index % 16) == 0  ) 
+                                dbg_printf("\r\n %.4x|  ",eeprom_offset+index);
+                        else if( (index % 8) == 0  ) 
+                                        printf("  ");
+                        dbg_printf("%.2x ", buffer[index]);
+                    }
+			        dbg_printf("\r\n");
+                }
+            }
 			close(fd);
 			}
 		}while(0);
