@@ -1,4 +1,4 @@
-CC = $(CROSS_COMPILE)gcc
+CC ?= $(CROSS_COMPILE)gcc
 TARGET = $(notdir $(CURDIR))_test
 SRC =  $(shell ls *.c)
 OBJS = $(patsubst %.c ,%.o ,$(SRC))
