@@ -39,7 +39,7 @@ SUBDIRS=audio framebuffer keypad rtc eeprom led can tty gpio
 endif
 
 ifeq ($(OPTION), MYD-YA157C)
-SUBDIRS=framebuffer keypad rtc eeprom led can rs232 rs485 gpio
+SUBDIRS=framebuffer keypad rtc eeprom led can rs232 rs485 gpio watchdog
 endif
 
 all: $(SUBDIRS)
