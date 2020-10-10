@@ -8,14 +8,14 @@ all:
 	make -C ./framebuffer
 	make -C ./i2c
 	make -C ./gpio_key
+	make -C ./gpio_led
 	make -C ./network
 	make -C ./rtc
 	make -C ./spiflash
-	make -C ./gpio_led
 	make -C ./rs485
 	make -C ./can
 	make -C ./uart
-	make -C ./audio
+	make -C ./watchdog
 
 .Phony: clean
 
@@ -30,6 +30,5 @@ clean:
 	make clean -C ./rs485
 	make clean -C ./can
 	make clean -C ./uart
-	make clean -C ./audio
 
 
