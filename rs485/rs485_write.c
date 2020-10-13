@@ -262,7 +262,7 @@ int rs485_enable(const int fd, const RS485_ENABLE_t enable)
 
 int main(int argc, char *argv[])
 {
-	char write_buf[20] = {0x0};
+	char write_buf[10] = {0x0,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09};
 	char read_buf[100];
 	int fd, i, len, nread,r;
 	pid_t pid;
