@@ -2,13 +2,14 @@
 * Copyright (C), 2016-2017, Sunny.Guo
 * FileName: main.c 
 * Author: Sunny.Guo
-* Version: 1.0
+* Version: 1.1
 * Date: 2017年 01月 19日 星期四 10:12:50 CST
 * Description: Main entry         
 *
 * History:        
 *  <author>  	<time>   	<version >   	<desc>
 *  Sunny.Guo   	19/01/2017      1.0     	create this moudle  
+*  Sunny.Guo   	25/11/2021      1.1             add eeprom check and byte write options	
 *                                                                          
 * Licensed under GPLv2 or later, see file LICENSE in this source tree.
 *******************************************************************************/
@@ -22,7 +23,7 @@
 static const char *		version 		= "1.0";
 static char *			dev_name 		= "/dev/i2c-0";
 
-static const char short_options[] = "d:a:w:r:e:s:hqx";
+static const char short_options[] = "d:a:w:r:e:s:c:hqx";
 
 static const struct option long_options[] = {
 			{"device", 	required_argument, 	NULL, 'd'},
@@ -32,7 +33,8 @@ static const struct option long_options[] = {
 			{"erase",	required_argument,	NULL, 'e'},
 			{"write",	required_argument,	NULL, 'w'},
 			{"quiet",	no_argument,		NULL, 'q'},
-			{"hex",	no_argument,		NULL, 'x'},
+			{"hex",		no_argument,		NULL, 'x'},
+			{"check",	required_argument,	NULL, 'c'},
 			{"help",	no_argument,		NULL, 'h'},
 			{0,		0,					0,  0}
 };
@@ -48,8 +50,9 @@ static void usage(FILE *fp, int argc, char **argv)
 			 "-s | --start addr 	start offset to read/write \n"
 			 "-r | --read  count    read byte count, count<64 \r\n"
 			 "-e | --erase  count   erase byte count, fill with 0x00, count<64 \r\n"
-			 "-w | --write frame 	write frame string. such as: 0123456789\r\n"
+			 "-w | --write frame 	write frame string or hex value(with -x). such as: 0123456789\r\n"
 			 "-x | --hex 	        display with hex mode.\n"
+			 "-c | --check len	write and check eeprom automatically with length \n"
 			 "-q | --quiet 	        quiet mode.\n"
 			 "-h | --help		   Print this message\n"
 			 "",
@@ -69,6 +72,10 @@ int main(int argc, char **argv)
 
     // quiet mode 0: noquiet   1: quiet
     int quietmode = 0;
+
+    //  WR check length
+    int chkmode = 0;
+    int chklen = 1024;
 
 	// eeprom i2c addr
 	int eeprom_addr = EEPROM_I2C_ADDR;
@@ -133,21 +140,30 @@ int main(int argc, char **argv)
 				count = atoi(optarg);
 				break;
 
-            case 'e':
-                optWrite = 1;
-                count = atoi(optarg);
-                strWriteFrame = (char*)malloc(count);
-                if(strWriteFrame!=NULL){
-                    memset(strWriteFrame, 0, count);
-                }
-                break;
+            		case 'e':
+                		optWrite = 1;
+                		count = atoi(optarg);
+                		strWriteFrame = (char*)malloc(count);
+                		if(strWriteFrame!=NULL){
+                    			memset(strWriteFrame, 0, count);
+                		}
+                		break;
 
 			case 'x':
 				hexmode = 1;
 				break;
 
+			case 'c':
+				chkmode = 1;
+				chklen = atoi(optarg);
+				if(chklen <= 0){
+					fprintf(stderr, "\n wrong length to check!\n");
+					exit(EXIT_FAILURE);
+				}
+				break;
+
 			case 'q':
-                quietmode = 1;
+                		quietmode = 1;
 				break;
 
 			case 'h':
@@ -177,23 +193,92 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 		}
 
+	if(chkmode == 1)
+	{
+		char wb[2] = {0x55,0xAA};
+		char rb[2] = {0};
+
+		for(int i=0;i<chklen;i++){
+			memset(rb,0,2);
+		    for(int j=0;j<2;j++){
+          		ret = eeprom_write(fd, eeprom_addr, i, &wb[j],1);
+			if(ret <= 0){
+				dbg_printf("Write to eeprom failed!\r\n");
+				close(fd);
+				exit(EXIT_FAILURE);
+			}
+				printf("w");
+				fflush(stdout);
+				usleep(20000);
+			ret = eeprom_read(fd, eeprom_addr, i, rb+j, 1);
+			if(ret < 0){
+				dbg_printf("read from eeprom failed!\r\n");
+				close(fd);
+				exit(EXIT_FAILURE);
+			}
+				printf("\br");
+				fflush(stdout);
+				usleep(20000);
+		       }
+
+			if((wb[0] == rb[0])&&(wb[1] == rb[1])){
+				printf("\b\bc");
+				if(i%100==0){printf("\n");}
+				fflush(stdout);
+			}
+			else
+			{
+				printf("\neeprom check error!\n");
+			printf(" wb:%x %x",wb[0],wb[1]);
+			printf(" rb:%x %x\n",rb[0],rb[1]);
+				close(fd);
+				exit(EXIT_FAILURE);
+
+			}
+		}
+		printf("\neeprom check success!\n");
+		close(fd);
+		exit(EXIT_SUCCESS);
+	}
+
 	do{
 		if(optWrite == 1){
-			dbg_printf("WRITE:%s\r\n", strWriteFrame);
-			
-            ret = eeprom_write(fd, eeprom_addr, eeprom_offset, strWriteFrame, count>0?count:strlen(strWriteFrame));
+
+		if(hexmode == 1){
+			char *end;	
+			int value = strtol(strWriteFrame, &end, 16);
+			dbg_printf("WRITE:0x%02x\r\n", value);
+			if (*end || value < 0 || value > 0xff) {
+			                fprintf(stderr, "Error: Data address invalid!\n");
+					                
+			usage(stdout,argc,argv);
+			exit(EXIT_FAILURE);
+			}
+
+            		ret = eeprom_write(fd, eeprom_addr, eeprom_offset, &value, 1);
 			if(ret <= 0){
 				dbg_printf("Write to eeprom failed!\r\n");
 				close(fd);
 				exit(EXIT_FAILURE);
 				}
-            if(count>0){
-                free(strWriteFrame);
-                strWriteFrame=NULL;
-            }
-			dbg_printf("WRITE SUCCESS!\r\n");
-			close(fd);
-			}
+		}
+		else
+		{
+			dbg_printf("WRITE:%s\r\n", strWriteFrame);
+            	ret = eeprom_write(fd, eeprom_addr, eeprom_offset, strWriteFrame, count>0?count:strlen(strWriteFrame));
+			if(ret <= 0){
+				dbg_printf("Write to eeprom failed!\r\n");
+				close(fd);
+				exit(EXIT_FAILURE);
+				}
+            		if(count>0){
+                		free(strWriteFrame);
+                		strWriteFrame=NULL;
+            		}
+		}
+		dbg_printf("WRITE SUCCESS!\r\n");
+		close(fd);
+		}
 		else if(optWrite == 0){
 //			dbg_printf("eeprom_read\n");
 			char buffer[EEPROM_BUFFER_SIZE] = {0};

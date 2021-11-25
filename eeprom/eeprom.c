@@ -119,7 +119,7 @@ int 			eeprom_read(int fd, int addr, int start, char *data, int len)
 
 	ret=ioctl(fd,I2C_RDWR,(unsigned long)&e2prom_data);
 	if(ret < 0 ) {
-		("ioctl error2");
+		perror("ioctl error2");
 	}
 
 	return ret;
