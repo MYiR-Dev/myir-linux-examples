@@ -1,0 +1,16 @@
+gen/main.object: main.c
+gen/main.object: /home/sunny/toolchain_linaro/ti-cgt-pru_2.1.3/include/stdint.h
+gen/main.object: /home/sunny/toolchain_linaro/ti-cgt-pru_2.1.3/include/stdio.h
+gen/main.object: /home/sunny/toolchain_linaro/ti-cgt-pru_2.1.3/include/linkage.h
+gen/main.object: /home/sunny/toolchain_linaro/ti-cgt-pru_2.1.3/include/stdarg.h
+gen/main.object: ../include/am437x/pru_cfg.h
+gen/main.object: ../include/am437x/pru_intc.h
+gen/main.object: ../include/rsc_types.h
+gen/main.object: ../include/pru_types.h
+gen/main.object: ../include/pru_virtqueue.h
+gen/main.object: ../include/pru_virtio_ring.h
+gen/main.object: ../include/pru_rpmsg.h
+gen/main.object: ../include/am437x/sys_mailbox.h
+gen/main.object: resource_table_0.h
+gen/main.object: /home/sunny/toolchain_linaro/ti-cgt-pru_2.1.3/include/stddef.h
+gen/main.object: ../include/pru_virtio_ids.h
